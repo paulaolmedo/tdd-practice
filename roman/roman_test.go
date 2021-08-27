@@ -7,21 +7,27 @@ import (
 )
 
 func TestValidNumber(t *testing.T) {
-	roman := 1
+	arabic1 := 1
+	arabic8 := 8
 
-	arabic, _ := ConvertToRomanString(roman)
+	roman1, err1 := ConvertToRomanString(arabic1)
+	roman8, err8 := ConvertToRomanString(arabic8)
 
-	assert.Equal(t, "expectedArabic", arabic)
+	assert.Empty(t, err1)
+	assert.Equal(t, "I", roman1)
+
+	assert.Empty(t, err8)
+	assert.Equal(t, "VIII", roman8)
 }
 
 func TestInvalidNumber(t *testing.T) {
-	roman := 0
+	arabic := 0
 
-	arabic, err := ConvertToRomanString(roman)
+	roman, err := ConvertToRomanString(arabic)
 
-	expectedArabic := ""
+	expectedRoman := ""
 	expectedError := "cannot be negative"
 
-	assert.Equal(t, expectedArabic, arabic)
+	assert.Equal(t, expectedRoman, roman)
 	assert.EqualError(t, err, expectedError)
 }
