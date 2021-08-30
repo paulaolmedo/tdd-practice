@@ -59,3 +59,17 @@ func TestMulti3(t *testing.T) {
 	assert.Empty(t, err29)
 	assert.Equal(t, "XXIX", roman29)
 }
+
+func TestMulti4(t *testing.T) {
+	arabic20 := 30
+	roman20, err20 := ConvertToRomanString(arabic20)
+
+	arabic29 := 39
+	roman29, err29 := ConvertToRomanString(arabic29)
+
+	assert.Empty(t, err20)
+	assert.Equal(t, "XXX", roman20)
+
+	assert.Empty(t, err29)
+	assert.Equal(t, "XXXIX", roman29)
+}
