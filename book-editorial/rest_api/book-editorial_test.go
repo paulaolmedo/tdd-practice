@@ -4,7 +4,7 @@ func TestAddToCartShouldReturnBooksItems(t testing.T) {
 
 }
 
-func testValidateCart(t testing.T) {
+func testValidateCart30Minutes(t testing.T) {
 
 }
 
