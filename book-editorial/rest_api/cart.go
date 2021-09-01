@@ -1,49 +1,38 @@
 package rest_api
 
 import (
-	"errors"
 	"github.com/google/uuid"
 )
 
-type Book struct {
-	Isbn string
-	Price float32
-}
+var catalog = []string{"isbn1", "isbn2", "isbn3", "isbn4"}
 
 type Cart struct {
-	Id string
-	Books []Book
+	Id          string
+	Catalog     []string
+	Books       map[string]int
 	TotalAmount float32
-	Editorial Editorial
 }
 
-func NewCart(client, password string) (Cart, error) {
-	if client == "" || password == ""{
-		return Cart{}, errors.New("1 | Client or Password can not be empty")
+func NewCart() Cart {
+	id, _ := uuid.NewUUID()
+	cart := Cart{
+		Id:      id.String(),
+		Catalog: catalog,
+		Books:   map[string]int{},
 	}
+	return cart
 
-	id, err := uuid.NewUUID()
-	if err != nil{
-		return Cart{}, errors.New("1 | Can not generate id")
-	}
-
-	return Cart{
-		Id:          id.String(),
-		Books:       nil,
-		TotalAmount: 0,
-		Editorial:   Editorial{},
-	}, nil
 }
 
-func (c *Cart) AddBook(book Book) bool{
-	for _, isbn := range c.Editorial.Library {
-		if isbn == book.Isbn {
-			c.Books = append(c.Books, book)
+func (c *Cart) AddBook(book string) bool {
+	for _, isbn := range c.Catalog {
+		if isbn == book {
+			if quantity, ok := c.Books[isbn]; ok {
+				c.Books[isbn] = quantity + 1
+			}
+			c.Books[isbn] = 1
 			return true
 		}
 	}
 	return false
 }
-
-
-
