@@ -1,13 +1,13 @@
 package rest_api
 
-func TestAddToCartShouldReturnBooksItems(t testing.T) {
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
 
-}
-
-func testValidateCart30Minutes(t testing.T) {
-
-}
-
-func testCheckoutCartShouldReturnTransaction(t testing.T) {
-
+func TestEditorialNotEmptyLibrary(t *testing.T){
+	editorial := Editorial{
+		Library: []string{"1234"},
+	}
+	assert.NotEmpty(t, editorial.Library)
 }
