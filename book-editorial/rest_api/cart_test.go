@@ -15,13 +15,18 @@ func TestNotEmptyCart(t *testing.T) {
 	cart := NewCart()
 	cart.AddBook("isbn1")
 	cart.AddBook("isbn2")
+
+	actualLength := len(cart.Books)
+	expectedLength := 2
+
 	assert.NotEmpty(t, cart.Books)
-	assert.Equal(t, 2, len(cart.Books))
+	assert.Equal(t, expectedLength, actualLength)
 }
 
 func TestShouldNotAddExternalBooks(t *testing.T) {
 	cart := NewCart()
 	result := cart.AddBook("isbn0")
+
 	assert.False(t, result)
 	assert.Empty(t, cart.Books)
 }
@@ -30,6 +35,10 @@ func TestAddSameBookShouldIncrementQuantity(t *testing.T) {
 	cart := NewCart()
 	cart.AddBook("isbn1")
 	cart.AddBook("isbn1")
+
+	actualLength := cart.Books["isbn1"]
+	expectedLength := 2
+
 	assert.NotEmpty(t, cart.Books)
-	assert.Equal(t, 2, cart.Books["isbn1"], "Books quantity must be 2 ")
+	assert.Equal(t, expectedLength, actualLength, "Books quantity must be 2 ")
 }
