@@ -6,8 +6,6 @@ import (
 )
 
 func TestEditorialNotEmptyLibrary(t *testing.T){
-	editorial := Editorial{
-		Library: []string{"1234"},
-	}
+	editorial := NewEditorial()
 	assert.NotEmpty(t, editorial.Library)
 }
