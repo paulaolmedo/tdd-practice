@@ -21,7 +21,6 @@ func NewCart() Cart {
 		Books:   map[string]int{},
 	}
 	return cart
-
 }
 
 func (c *Cart) AddBook(book string) bool {
@@ -29,8 +28,9 @@ func (c *Cart) AddBook(book string) bool {
 		if isbn == book {
 			if quantity, ok := c.Books[isbn]; ok {
 				c.Books[isbn] = quantity + 1
+			} else {
+				c.Books[isbn] = 1
 			}
-			c.Books[isbn] = 1
 			return true
 		}
 	}
