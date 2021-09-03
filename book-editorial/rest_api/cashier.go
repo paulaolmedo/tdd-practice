@@ -7,6 +7,7 @@ import (
 )
 
 type Cashier struct {
+	Prices map[string]float32
 }
 
 type CreditCard struct {
@@ -63,11 +64,17 @@ func (c Cashier) ValidateCreditCard(card *CreditCard) (interface{}, error) {
 	return "", nil
 }
 
-func (c Cashier) ProcessCart(cart Cart, card CreditCard) (interface{}, error) {
+func (c Cashier) ProcessCart(cart Cart, card CreditCard) (float32, error) {
 	if len(cart.Books) == 0 {
-		return nil, errors.New("cart is empty")
+		return 0, errors.New("cart is empty")
 	}
-	return nil, nil
+
+	totalAmount := float32(0)
+	for book, quantity := range cart.Books{
+		totalAmount = totalAmount + c.Prices[book] * float32(quantity)
+	}
+
+	return totalAmount, nil
 }
 
 func recursionCountDigits(number int64) int64 {

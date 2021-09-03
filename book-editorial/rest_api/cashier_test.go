@@ -122,8 +122,9 @@ func TestProcessCart(t *testing.T) {
 		ExpirationYear:  "9999",
 		CardOwner: "PECA",
 	}
-	_, err := cashier.ProcessCart(cart, creditCard)
+	total, err := cashier.ProcessCart(cart, creditCard)
 	assert.NoError(t, err)
+	assert.Equal(t, float32(0), total)
 }
 
 func TestProcessEmptyCart(t *testing.T) {
@@ -137,4 +138,24 @@ func TestProcessEmptyCart(t *testing.T) {
 	_, err := cashier.ProcessCart(cart, creditCard)
 	assert.Error(t, err)
 	assert.EqualError(t, err, "cart is empty")
+}
+
+func TestProcessCartReturnsTotalAmount(t *testing.T) {
+	cashier := NewCashier()
+	cashier.Prices = map[string]float32{
+		"isbn1" : float32(50),
+	}
+
+	cart := NewCart()
+	cart.AddBook("isbn1")
+	cart.AddBook("isbn1")
+	creditCard := CreditCard{
+		Number:          4349008516656431,
+		ExpirationMonth: "01",
+		ExpirationYear:  "9999",
+		CardOwner: "PECA",
+	}
+	total, err := cashier.ProcessCart(cart, creditCard)
+	assert.NoError(t, err)
+	assert.Equal(t, float32(100), total)
 }
