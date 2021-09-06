@@ -2,6 +2,7 @@ package rest_api
 
 import (
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -105,4 +106,38 @@ func TestAddToCart(t *testing.T) {
 	assert.True(t, ok)
 	assert.NotEmpty(t, cart.Books)
 	assert.Equal(t, expectedLength, actualLength)
+}
+
+func TestAddToCartAfter30Mins(t *testing.T) {
+	var service BookStoreService
+
+	id, err := service.CreateCart("client1", "password1")
+	require.NoError(t, err)
+
+	err = service.AddBook(id, "isbn1")
+	require.NoError(t, err)
+
+	// mock de la fecha del service
+	dueTime := time.Now().Add(time.Minute * -40)
+	service.update = dueTime
+
+	err = service.AddBook(id, "isbn2")
+	assert.Error(t, err)
+}
+
+func TestFindCartAfter30Mins(t *testing.T) {
+	var service BookStoreService
+
+	id, err := service.CreateCart("client1", "password1")
+	require.NoError(t, err)
+
+	_, err = service.FindCart(id)
+	require.NoError(t, err)
+
+	// mock de la fecha del service
+	dueTime := time.Now().Add(time.Minute * -40)
+	service.update = dueTime
+
+	_, err = service.FindCart(id)
+	assert.Error(t, err)
 }
