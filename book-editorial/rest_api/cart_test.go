@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestEmptyCart(t *testing.T) {
@@ -43,5 +44,65 @@ func TestAddSameBookShouldIncrementQuantity(t *testing.T) {
 	assert.Equal(t, expectedLength, actualLength, "Books quantity must be 2 ")
 }
 
+func TestValidClientID(t *testing.T) {
+	var bookService BookStoreService
+	ok, err := bookService.ValidateUser("client1", "password1")
 
+	require.NoError(t, err)
+	assert.True(t, ok)
+}
 
+func TestInvalidClientID(t *testing.T) {
+	var bookService BookStoreService
+	notOk, err := bookService.ValidateUser("clientID", "password")
+
+	assert.Error(t, err, "el cliente no existe")
+	assert.False(t, notOk)
+}
+
+func TestInvalidPassword(t *testing.T) {
+	var bookService BookStoreService
+	notOk, err := bookService.ValidateUser("client1", "someotherpassword")
+
+	assert.Error(t, err, "la contraseña es inválida")
+	assert.False(t, notOk)
+}
+
+func TestCreateCartWithValidUser(t *testing.T) {
+	var service BookStoreService
+
+	id, err := service.CreateCart("client1", "password1")
+	require.NoError(t, err)
+
+	cart, err := service.FindCart(id)
+	require.NoError(t, err)
+
+	assert.NotEmpty(t, cart)
+}
+
+func TestFindInvalidCart(t *testing.T) {
+	var service BookStoreService
+
+	cart, err := service.FindCart("someotherid")
+
+	assert.Error(t, err, "no such cart")
+	assert.Empty(t, cart)
+}
+
+func TestAddToCart(t *testing.T) {
+	var service BookStoreService
+
+	id, err := service.CreateCart("client1", "password1")
+	require.NoError(t, err)
+
+	cart, err := service.FindCart(id)
+	require.NoError(t, err)
+
+	ok := cart.AddBook("isbn1")
+	expectedLength := 1
+	actualLength := len(cart.Books)
+
+	assert.True(t, ok)
+	assert.NotEmpty(t, cart.Books)
+	assert.Equal(t, expectedLength, actualLength)
+}

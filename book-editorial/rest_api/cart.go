@@ -11,9 +11,11 @@ type Cart struct {
 	Catalog     []string
 	Books       map[string]int
 	TotalAmount float32
+	ClientID    string
 }
 
-func NewCart() Cart {
+// TODO CAMBIAR ESTO
+func NewCart(...string) Cart {
 	id, _ := uuid.NewUUID()
 	cart := Cart{
 		Id:      id.String(),
